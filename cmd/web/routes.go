@@ -3,15 +3,18 @@ package main
 import (
 	"github.com/ahmadakhmiev/gomod/pkg/config"
 	"github.com/ahmadakhmiev/gomod/pkg/handlers"
-	"github.com/bmizerany/pat"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
 )
 
 func routes(app *config.AppConfig) http.Handler {
-	mux := pat.New()
+	mux := chi.NewRouter()
 
-	mux.Get("/", http.HandlerFunc(handlers.Repo.Home))
-	mux.Get("/about", http.HandlerFunc(handlers.Repo.About))
+	mux.Use(middleware.Recoverer)
+
+	mux.Get("/", handlers.Repo.Home)
+	mux.Get("/about", handlers.Repo.About)
 
 	return mux
 }
